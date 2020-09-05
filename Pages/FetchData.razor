@@ -1,0 +1,57 @@
+﻿@page "/fetchdata"
+
+@using DiveLog.Data
+@inject WeatherForecastService ForecastService
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="col-sm-12">
+        <div class="lh-table-container">
+            <div class="lh-header-container">
+            </div>
+            <div class="lh-table-container-inner">
+                <table class="table table-condensed table-striped table-hover lh-table">
+                    <caption class="lh-caption">
+                        All Locations
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th class="lh-th"><div class="lh-th-bottomline">Date</div></th>
+                            <th class="lh-th"><div class="lh-th-bottomline">Temp. (C)</div></th>
+                            <th class="lh-th"><div class="lh-th-bottomline">Temp. (F)</div></th>
+                            <th class="lh-th"><div class="lh-th-bottomline">Summary</div></th>
+                        </tr>
+                    </thead>
+                    <tbody data-link="row" class="rowlink">
+                        @foreach (var forecast in forecasts)
+                        {
+                        <tr>
+                            <td class="lh-td">@forecast.Date.ToShortDateString()</td>
+                            <td class="lh-td">@forecast.TemperatureC</td>
+                            <td class="lh-td">@forecast.TemperatureF</td>
+                            <td class="lh-td">@forecast.Summary</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private WeatherForecast[] forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+}
